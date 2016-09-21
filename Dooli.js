@@ -168,18 +168,3 @@
   }
 
 }(window))
-
-console.log(
-  Dooli("dooli")
-    .css("color: #F00", "font-size: 23px")
-    .addClass("test", "test-new-dooli")
-    .removeClass("dooli", "test")
-    .attr("data-type=0", "data-start=hi!")
-    .get("data-type", "data-start")
-);
-
-D.post("ajax.php", "ajax=123")
- .then(
-    r => alert(r),
-    e => alert(e)
-  );
