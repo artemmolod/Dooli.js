@@ -108,25 +108,9 @@
   }
 
   window.D = {};
-  D.xhr = function() {
-    let x;
-    try {
-      x = new ActiveXObject('Msxml2.XMLHTTP');
-    } catch (e) {
-      try {
-        x = new ActiveXObject('Microsoft.XMLHTTP');
-      } catch (E) {
-        x = false;
-      }
-    }
-    if (!x && typeof XMLHttpRequest != 'undefined') {
-      x = new XMLHttpRequest();
-    }
-    return x;
-  }  
   D.get = function(url) {
     return new Promise(function(success, reject){
-      let xhr = D.xhr();
+      let xhr = new XMLHttpRequest();
       xhr.open("GET", url);
       xhr.onreadystatechange = function() {
         if (xhr.readyState == 4) {
@@ -144,7 +128,7 @@
       if (!data) {
         reject(new Error("Second parameter not found"));
       } 
-      let xhr = D.xhr();
+      let xhr = new XMLHttpRequest();
       xhr.open("POST", url);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
       xhr.onreadystatechange = function() {
