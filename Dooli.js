@@ -13,6 +13,17 @@
       }
     }
 
+    first() {
+      this.el = this.el[0];
+      return this;
+    }
+
+    num(i) {
+      if (i >= this.el.length) i = 0;
+      this.el = this.el[i];
+      return this;
+    }
+
     html() {
       if (arguments[0]) {
         this.el.innerHTML = arguments[0];
@@ -108,6 +119,22 @@
   }
 
   window.D = {};
+  D.xhr = function() {
+    let x;
+    try {
+      x = new ActiveXObject('Msxml2.XMLHTTP');
+    } catch (e) {
+      try {
+        x = new ActiveXObject('Microsoft.XMLHTTP');
+      } catch (E) {
+        x = false;
+      }
+    }
+    if (!x && typeof XMLHttpRequest != 'undefined') {
+      x = new XMLHttpRequest();
+    }
+    return x;
+  }  
   D.get = function(url) {
     return new Promise(function(success, reject){
       let xhr = new XMLHttpRequest();
@@ -125,7 +152,7 @@
   }
   D.post = function(url, data) {
     return new Promise(function(success, reject){
-      if (!data) {
+      if (data) {
         reject(new Error("Second parameter not found"));
       } 
       let xhr = new XMLHttpRequest();
