@@ -56,3 +56,22 @@ D.get(url)
     }
  );
 ```
+
+Стороннее расширение библиотеки:
+```javascript
+class MyDooli extends DooliObject {
+  constructor(e) {
+    super(e);
+  }
+  
+  /**
+   * update method html
+   * */
+  html(v) {
+    return v == undefined ? this.el.innerHTML : this.el.innerHTML = v; 
+  }
+  
+  ...
+}
+```
+Таким образом Вы можете расширить основной функционал библиотеки.

@@ -178,4 +178,5 @@
     });
   }
 
+window.DooliObject = DooliObject;
 }(window))
