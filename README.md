@@ -56,7 +56,41 @@ D.get(url)
     }
  );
 ```
-
+Работа с шаблонами:
+-------
+Пусть есть такая разметка:
+```html
+<div id="tpl">
+    <div ...>
+        My name is {name}
+    </div>
+</div>
+```
+То такой скрипт заменит все найденные **name** на Artem
+```javascript
+let tpl = TPL_("tpl");
+tpl.parse("name", "Artem");
+``` 
+Также разметку можно продублировать нужное количество раз, например:
+```javascript
+tpl.each(3).parse("name", "Artem");
+```
+И она будет такой:
+```html
+<div id="tpl">
+    <div ...>
+        My name is Artem
+    </div>
+    <div ...>
+        My name is Artem
+    </div>
+    <div ...>
+        My name is Artem
+    </div>
+</div>
+```
+Дублирование можно производить без метода **parse**.
+___________
 Стороннее расширение библиотеки:
 ```javascript
 class MyDooli extends DooliObject {

@@ -118,7 +118,35 @@
 
   }
 
+  class TPL {
+    constructor(selector) {
+      this.tpl = document.getElementById(selector);
+      if (this.tpl == null) {
+        console.error(`Element with id = ${selector} in DOM not found`);
+        return 0;
+        //this.tpl = document.querySelectorAll(selector);
+      }
+    }
+
+    each(count_parse_element) {
+      let string = this.tpl.innerHTML;
+      for (let i = 0; i++ < count_parse_element - 1; string += this.tpl.innerHTML);
+      this.tpl.innerHTML = string;
+      return this;
+    }
+
+    parse(key, value) {
+      let string = this.tpl.innerHTML;
+      this.tpl.innerHTML = string.split("{" + key + "}").join(value);
+    }
+  }
+
+  window.TPL_ = function(el) {
+    return new TPL(el);
+  }
+
   window.D = {};
+
   D.xhr = function() {
     let x;
     try {
@@ -135,6 +163,7 @@
     }
     return x;
   }  
+
   D.get = function(url) {
     return new Promise(function(success, reject){
       let xhr = new XMLHttpRequest();
@@ -150,6 +179,7 @@
       xhr.send(null);  
     });
   }
+
   D.post = function(url, data) {
     return new Promise(function(success, reject){
       if (data) {
@@ -176,6 +206,10 @@
       console.log(params);
       xhr.send(params.join("&"));  
     });
+  }
+
+  D.rand = function(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
 window.DooliObject = DooliObject;
