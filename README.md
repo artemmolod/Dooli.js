@@ -1,4 +1,4 @@
-JavaScript libraly - Dooli
+﻿JavaScript libraly - Dooli
 ====================
 
 Мини библиотека, реализованная на ES6.
@@ -30,82 +30,3 @@ __________
 <i>clone</i> - клонирует элемент<br/>
 
 Методы, которые не возвращают результата можно чейнить.
-
-<h2>Ajax запросы созданы с помощью <i>Promise</i></h2>
-Пример <b>post</b>-запроса:
-```javascript
-D.post(url, data)
- .then(
-    result => {
-        //обработка ответа
-    },
-    error => {
-        //обработка ошибки
-    }
- );
-```
-Пример <b>get</b>-запроса:
-```javascript
-D.get(url)
- .then(
-    result => {
-        //обработка ответа
-    },
-    error => {
-        //обработка ошибки
-    }
- );
-```
-Работа с шаблонами:
--------
-Пусть есть такая разметка:
-```html
-<div id="tpl">
-    <div ...>
-        My name is {name}
-    </div>
-</div>
-```
-То такой скрипт заменит все найденные **name** на Artem
-```javascript
-let tpl = TPL_("tpl");
-tpl.parse("name", "Artem");
-``` 
-Также разметку можно продублировать нужное количество раз, например:
-```javascript
-tpl.each(3).parse("name", "Artem");
-```
-И она будет такой:
-```html
-<div id="tpl">
-    <div ...>
-        My name is Artem
-    </div>
-    <div ...>
-        My name is Artem
-    </div>
-    <div ...>
-        My name is Artem
-    </div>
-</div>
-```
-Дублирование можно производить без метода **parse**.
-___________
-Стороннее расширение библиотеки:
-```javascript
-class MyDooli extends DooliObject {
-  constructor(e) {
-    super(e);
-  }
-  
-  /**
-   * update method html
-   * */
-  html(v) {
-    return v == undefined ? this.el.innerHTML : this.el.innerHTML = v; 
-  }
-  
-  ...
-}
-```
-Таким образом Вы можете расширить основной функционал библиотеки.
