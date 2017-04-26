@@ -13,6 +13,10 @@
       }
     }
 
+    obj() {
+      return this.el;
+    }
+
     first() {
       this.el = this.el[0];
       return this;
@@ -124,7 +128,6 @@
       if (this.tpl == null) {
         console.error(`Element with id = ${selector} in DOM not found`);
         return 0;
-        //this.tpl = document.querySelectorAll(selector);
       }
     }
 
@@ -138,6 +141,7 @@
     parse(key, value) {
       let string = this.tpl.innerHTML;
       this.tpl.innerHTML = string.split("{" + key + "}").join(value);
+      return this;
     }
   }
 
@@ -148,20 +152,7 @@
   window.D = {};
 
   D.xhr = function() {
-    let x;
-    try {
-      x = new ActiveXObject('Msxml2.XMLHTTP');
-    } catch (e) {
-      try {
-        x = new ActiveXObject('Microsoft.XMLHTTP');
-      } catch (E) {
-        x = false;
-      }
-    }
-    if (!x && typeof XMLHttpRequest != 'undefined') {
-      x = new XMLHttpRequest();
-    }
-    return x;
+    return ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;;
   }  
 
   D.get = function(url) {
@@ -214,3 +205,4 @@
 
 window.DooliObject = DooliObject;
 }(window))
+
