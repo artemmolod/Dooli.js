@@ -1,14 +1,20 @@
 ;(function(window){
   "use strict";
 
-  window.Dooli = function(selector) {
-    return new DooliObject(selector);
-  }
+  window.Dooli = function(selector, options = {}) {
+    return new DooliObject(selector, options);
+  };
 
   class DooliObject {
-    constructor(selector) {
-      this.el = document.getElementById(selector);
-      if (this.el == null) {
+
+    constructor(selector, options = {}) {
+      if (options.isTag) {
+        this.el = document.getElementsByTagName(selector);
+      } else {
+        this.el = document.getElementById(selector);
+      }
+
+      if (!this.el) {
         this.el = document.querySelectorAll(selector);
       }
     }
@@ -63,11 +69,6 @@
       return this;
     }
 
-    click() {
-      this.el.click();
-      return this;
-    }
-
     attr(...rest) {
       for (var i = 0; i < rest.length; i++) {
         let attr_ = rest[i].toLowerCase().split("=")[0];
@@ -78,7 +79,7 @@
     }
 
     get(...rest) {
-      if (rest.length == 1) {
+      if (rest.length === 1) {
         return this.el.getAttribute(rest[0]);
       } else {
         for (var i = 0, arr = []; i++ < rest.length; arr.push(this.el.getAttribute(rest[i - 1])));
@@ -120,15 +121,77 @@
       return this;
     }
 
+    click(callback, context = this) {
+      const args = Array.prototype.slice.call(arguments);
+      if (!args.length) {
+          this.el.click();
+          return this;
+      }
+
+      this.el.addEventListener('click', callback.bind(context));
+      return this;
+    }
+
+    change(callback, context = this) {
+      this.el.addEventListener('change', callback.bind(context));
+      return this;
+    }
+
+    timer(timer, callback) {
+      const now = Math.floor(Date.now() / 1000);
+      const timeEnd = now + timer;
+      const _timer = setInterval(() => {
+        if (Math.floor(Date.now() / 1000) >= timeEnd && typeof callback === 'function') {
+          clearInterval(_timer);
+          callback();
+        }
+      }, 1000);
+
+      return this;
+    }
   }
 
-  class TPL {
-    constructor(selector) {
-      this.tpl = document.getElementById(selector);
+  class TPL_ {
+
+    constructor() {
+      this.cache = [];
+    }
+
+    init(selector) {
+      this.tpl = document.getElementById(selector) || document.querySelector(selector);
       if (this.tpl == null) {
-        console.error(`Element with id = ${selector} in DOM not found`);
-        return 0;
+        console.error(`Element with selector = ${selector} in DOM not found`);
+        return this.tpl;
       }
+    }
+
+    getContent(el) {
+      return el.innerHTML;
+    }
+
+    setIfBlock(name, condition, isNotUpdate = false) {
+      const blocks = document.getElementsByTagName('dooli:if');
+      const keys = Object.keys(blocks);
+      let el = null;
+      keys.forEach((key) => {
+        if (blocks[key].getAttribute('var') === name) {
+          el = blocks[key];
+          if (!isNotUpdate && !this.cache[name]) {
+            this.cache[name] = {
+              block: this.getContent(blocks[key]),
+              condition: condition,
+            };
+          }
+        }
+      });
+
+      if (!this.cache[name]) {
+        return this;
+      }
+
+      el.innerHTML = condition ? this.cache[name].block : '';
+
+      return this;
     }
 
     each(count_parse_element) {
@@ -146,47 +209,51 @@
   }
 
   window.TPL_ = function(el) {
-    return new TPL(el);
-  }
+    return new TPL_(el);
+  };
 
   window.D = {};
 
   D.xhr = function() {
     return ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;;
-  }  
+  };
 
   D.get = function(url) {
     return new Promise(function(success, reject){
       let xhr = new XMLHttpRequest();
       xhr.open("GET", url);
       xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4) {
+        if (xhr.readyState === 4) {
           success(xhr.responseText);
         }
-      }
+      };
       xhr.onerror = function() {
         reject(new Error("Network Error"));
-      }
-      xhr.send(null);  
+      };
+      xhr.send(null);
     });
-  }
+  };
 
   D.post = function(url, data) {
     return new Promise(function(success, reject){
       if (data) {
         reject(new Error("Second parameter not found"));
-      } 
+      }
       let xhr = new XMLHttpRequest();
+
       xhr.open("POST", url);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
       xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4) {
+        if (xhr.readyState === 4) {
           success(xhr.responseText);
         }
-      }
+      };
+
       xhr.onerror = function() {
         reject(new Error("Network Error"));
-      }
+      };
+
       let spl = data.split(",");
       let params = [];
       for (let i = 0; i < spl.length; i++) {
@@ -194,15 +261,16 @@
         let value = spl[i].split("=")[1];
         params.push(query + "=" + encodeURIComponent(value));
       }
-      console.log(params);
-      xhr.send(params.join("&"));  
+
+      xhr.send(params.join("&"));
     });
-  }
+  };
 
   D.rand = function(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
-  }
+  };
 
 window.DooliObject = DooliObject;
-}(window))
+window.TPLObject = TPL_;
+}(window));
 
