@@ -1,8 +1,8 @@
 ;(function(window){
   "use strict";
 
-  window.Dooli = function(selector) {
-    return new DooliObject(selector);
+  window.Dooli = function(selector, options = {}) {
+    return new DooliObject(selector, options);
   };
 
   class DooliObject {
