@@ -157,8 +157,13 @@
       this.cache = [];
     }
 
+    ge(id) {
+      return document.getElementById(id);
+    }
+
     init(selector) {
-      this.tpl = document.getElementById(selector) || document.querySelector(selector);
+      this.tpl = this.ge(selector) || document.querySelector(selector);
+      this.Dooli = new DooliObject();
       if (this.tpl == null) {
         console.error(`Element with selector = ${selector} in DOM not found`);
         return this.tpl;
@@ -167,6 +172,27 @@
 
     getContent(el) {
       return el.innerHTML;
+    }
+
+    setIteration(id, params = {}) {
+      this.tpl = this.ge(id);
+      const count = params.data ? params.data.length : 1;
+      this.parse('count', count);
+
+      if (params.data) {
+        const data = params.data;
+        let result = '';
+        data.forEach((item) => {
+          let string = this.tpl.innerHTML;
+          const keys = Object.keys(item);
+          keys.forEach((key) => {
+            string = this.parseString(string, key, item[key]);
+          });
+          result += string;
+        });
+
+        this.tpl.innerHTML = result;
+      }
     }
 
     setIfBlock(name, condition, isNotUpdate = false) {
@@ -198,13 +224,19 @@
       let string = this.tpl.innerHTML;
       for (let i = 0; i++ < count_parse_element - 1; string += this.tpl.innerHTML);
       this.tpl.innerHTML = string;
+
       return this;
     }
 
     parse(key, value) {
       let string = this.tpl.innerHTML;
       this.tpl.innerHTML = string.split("{" + key + "}").join(value);
+
       return this;
+    }
+
+    parseString(string, key, value) {
+      return string.split("{" + key + "}").join(value);
     }
   }
 
