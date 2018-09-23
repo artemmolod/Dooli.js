@@ -7,9 +7,15 @@ Dooli('button').click(() => {
     TPL.setIfBlock('test', true, true);
 });
 
-Dooli().timer(3, () => {
-    Dooli('button').click();
+TPL.setIteration('iterateWrap', {
+    data: [
+        {
+            name: 'Artem',
+            age: 20,
+        },
+        {
+            name: 'Anya',
+            age: 24,
+        },
+    ],
 });
-
-
-Dooli('main').css('color:red;background-color:#000;');

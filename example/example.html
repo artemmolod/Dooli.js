@@ -5,6 +5,10 @@
     <title>Example for Dooli.js</title>
     <!--<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>-->
     <script src="../Dooli.js"></script>
+
+    <style>
+
+    </style>
 </head>
 <body>
     <div id="main">
@@ -12,6 +16,12 @@
         <dooli:if var="main">world</dooli:if>
 
         <button id="button">показать</button>
+
+        <dooli:iterate id="iterateWrap">
+            <div class="">
+                я в цикле {count} раз(а). My name is {name}. Me is {age}.
+            </div>
+        </dooli:iterate>
     </div>
     <script src="example.js"></script>
 </body>

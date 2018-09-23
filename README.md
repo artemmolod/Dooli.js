@@ -72,7 +72,7 @@ tpl.each(2) //дублируем 2 раза
 > Hello!
 > Hello!
 
-## Условия ##
+### Условия ###
 
 ```html
 <dooli:if var="first">Первое условие</dooli:if>
@@ -85,8 +85,34 @@ TPL.setIfBlock('first', false);
 
 В таком случае текст `Первое условие` отрендерен на странице не будет. Изменить значение переменной можно, передав вторым и третьим агрументом `true`.
 
+### Итерация ###
 
-
+```html
+ <dooli:iterate id="iterateWrap">
+    <div>я в цикле {count} раз. My name is {name}. I'm {age}.</div>
+</dooli:iterate>
+```
+```javascript
+TPL.setIteration('iterateWrap', {
+    data: [
+        {
+            name: 'Artem',
+            age: 20,
+        },
+        {
+            name: 'Anya',
+            age: 24,
+        },
+    ],
+});
+```
+ `setIteration` принимает два аргумента: `irerateWrap` - id контейнера, `data` - массив объектов, которыми будет заполнена строка.
+ В данном примере результат *HTML* будет таким:
+ 
+```html
+<div>я в цикле 2 раз. My name is Artem. I'm 20.</div>
+<div>я в цикле 2 раз. My name is Anya. I'm 24.</div>
+```
 
 
 
