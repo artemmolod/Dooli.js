@@ -27,12 +27,14 @@
 
     first() {
       this.el = this.el[0];
+
       return this;
     }
 
     num(i) {
       if (i >= this.el.length) i = 0;
       this.el = this.el[i];
+
       return this;
     }
 
@@ -49,16 +51,19 @@
         let style_ = rest[i].toLowerCase().split(":")[1];
         this.el.style[style_name] = style_;
       }
+
       return this;
     }
 
     addClass(...rest) {
       for (let i = 0; i++ < rest.length; this.el.classList.add(rest[i - 1]));
+
       return this;
     }
 
     removeClass(...rest) {
       for (let i = 0; i++ < rest.length; this.el.classList.remove(rest[i - 1]));
+
       return this;
     }
 
@@ -68,15 +73,17 @@
 
     focus() {
       this.el.focus();
+
       return this;
     }
 
     attr(...rest) {
-      for (var i = 0; i < rest.length; i++) {
+      for (let i = 0; i < rest.length; i++) {
         let attr_ = rest[i].toLowerCase().split("=")[0];
         let attr_val = rest[i].toLowerCase().split("=")[1];
         this.el.setAttribute(attr_, attr_val);
       }
+
       return this;
     }
 
@@ -115,11 +122,13 @@
 
     hide() {
       this.css("display:none");
+
       return this;
     }
 
     show() {
       this.css("display: block");
+
       return this;
     }
 
