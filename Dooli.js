@@ -6,7 +6,6 @@
   };
 
   class DooliObject {
-
     constructor(selector, options = {}) {
       if (options.isTag) {
         this.el = document.getElementsByTagName(selector);
@@ -48,8 +47,8 @@
     css(...rest) {
       for (let i = 0; i < rest.length; i++) {
         let style_name = rest[i].toLowerCase().split(":")[0];
-        let style_ = rest[i].toLowerCase().split(":")[1];
-        this.el.style[style_name] = style_;
+        let _style = rest[i].toLowerCase().split(":")[1];
+        this.el.style[style_name] = _style;
       }
 
       return this;
@@ -160,9 +159,11 @@
           callback();
         }
 
-        if (Math.floor(time % triggerEventTimer) === 0) {
-          if (typeof triggerEvent === 'function') {
-            triggerEvent();
+        if (triggerEventTimer) {
+          if (Math.floor(time % triggerEventTimer) === 0) {
+              if (typeof triggerEvent === 'function') {
+                  triggerEvent();
+              }
           }
         }
       }, 1000);
@@ -177,9 +178,7 @@
 
     bindMylty(el, items) {
       const keys = Object.keys(items);
-      keys.forEach((key) => {
-        this.bindEvent(key, items[key]);
-      });
+      keys.forEach((key) => this.bindEvent(key, items[key]));
     }
 
     addEvent(event, callback, ctx) {
@@ -321,6 +320,7 @@
       if (data) {
         reject(new Error("Second parameter not found"));
       }
+
       let xhr = new XMLHttpRequest();
 
       xhr.open("POST", url);
