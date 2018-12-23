@@ -154,22 +154,20 @@
       return this;
     }
 
-    bindEvent(el, event, callback, ctx) {
-      this.removeEvent(el, event, callback, ctx);
-      this.addEvent(el, event, callback), ctx;
+    bindEvent(event, callback, ctx) {
+      this.removeEvent(event, callback, ctx);
+      this.addEvent(event, callback, ctx);
     }
 
     bindMylty(el, items) {
       const keys = Object.keys(items);
       keys.forEach((key) => {
-        this.bindEvent(el, key, items[key]);
+        this.bindEvent(key, items[key]);
       });
     }
 
-    addEvent(el, event, callback, ctx) {
-      if (!el) {
-        el = this.obj();
-      }
+    addEvent(event, callback, ctx) {
+      const el = this.obj();
       if (window.addEventListener) {
         el.addEventListener(event, ctx ? callback.bind(ctx) : callback);
       } else {
@@ -177,10 +175,8 @@
       }
     }
 
-    removeEvent(el, event, callback, ctx) {
-        if (!el) {
-            el = this.obj();
-        }
+    removeEvent(event, callback, ctx) {
+        const el = this.obj();
         if (window.removeEventListener) {
             el.removeEventListener(event, ctx ? callback.bind(ctx) : callback);
         } else {

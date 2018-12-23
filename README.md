@@ -47,9 +47,9 @@ Dooli("dooli")
 Навешивать события можно несколькими способами:
 ```javascript
 Dooli('button').click(callback);
-Dooli('button').addEvent(null, 'click', callback, /* context */);
-Dooli('button').bindEvent(null, 'click', callback, /* context */);
-Dooli('button').bindMulty(null, {
+Dooli('button').addEvent('click', callback /*, context */);
+Dooli('button').bindEvent('click', callback /*, context */);
+Dooli('button').bindMulty({
     'click': () => {},
     'mousemove': () => {},
 });
