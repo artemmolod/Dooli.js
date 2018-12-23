@@ -17,5 +17,9 @@ TPL.setIteration('iterateWrap', {
             name: 'Anya',
             age: 24,
         },
+        {
+            name: 'Anya',
+            age: 24,
+        },
     ],
 });

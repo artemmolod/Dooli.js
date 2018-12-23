@@ -17,6 +17,8 @@
       if (!this.el) {
         this.el = document.querySelectorAll(selector);
       }
+
+      return this;
     }
 
     obj() {
@@ -129,11 +131,13 @@
       }
 
       this.el.addEventListener('click', callback.bind(context));
+
       return this;
     }
 
     change(callback, context = this) {
       this.el.addEventListener('change', callback.bind(context));
+
       return this;
     }
 
@@ -148,6 +152,40 @@
       }, 1000);
 
       return this;
+    }
+
+    bindEvent(el, event, callback, ctx) {
+      this.removeEvent(el, event, callback, ctx);
+      this.addEvent(el, event, callback), ctx;
+    }
+
+    bindMylty(el, items) {
+      const keys = Object.keys(items);
+      keys.forEach((key) => {
+        this.bindEvent(el, key, items[key]);
+      });
+    }
+
+    addEvent(el, event, callback, ctx) {
+      if (!el) {
+        el = this.obj();
+      }
+      if (window.addEventListener) {
+        el.addEventListener(event, ctx ? callback.bind(ctx) : callback);
+      } else {
+        el.attachEvent(`on${event}`, ctx ? callback.bind(ctx) : callback);
+      }
+    }
+
+    removeEvent(el, event, callback, ctx) {
+        if (!el) {
+            el = this.obj();
+        }
+        if (window.removeEventListener) {
+            el.removeEventListener(event, ctx ? callback.bind(ctx) : callback);
+        } else {
+            el.detachEvent(`on${event}`, ctx ? callback.bind(ctx) : callback);
+        }
     }
   }
 

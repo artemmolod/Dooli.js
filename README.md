@@ -36,8 +36,24 @@ Dooli("dooli")
 | click | устанавливает или вызывает обработчик элемента | `type` - тип события<br/> `callback` - коллбек<br/> `context` - контекст коллбека, если не указан, то принимает внутренний контекст |
 | clone | клонирует элемент | не требует |
 | timer | добавляет таймер и вызывает коллбек по его совершению | `timer` - время в секундах<br/> `callback` - коллбек |
+| addEvent | добавляем событие к элементу | `el (or null)` - куда вешаем событие<br/> `event` - название события (click, mousemove), `callback` - обработчик клика, `context` - контекст для обработчкика
+| removeEvent | удаляем событие у элемента | `el (or null)` - элемент<br/> `event` - название события (click, mousemove), `callback` - обработчик клика, `context` - контекст для обработчкика
+| bindEvent | применяет `removeEvent` и `addEvent` с таким же числом параметров
+| bindMulty | применяет несколько обработчиков на элемент | `el (or null)`, `object` - объект событий с ключем названия ивента и его обработчиком
 
 Методы, которые не возвращают результата можно чейнить.
+
+### События ###
+Навешивать события можно несколькими способами:
+```javascript
+Dooli('button').click(callback);
+Dooli('button').addEvent(null, 'click', callback, /* context */);
+Dooli('button').bindEvent(null, 'click', callback, /* context */);
+Dooli('button').bindMulty(null, {
+    'click': () => {},
+    'mousemove': () => {},
+});
+```
 
 ### Стороннее расширение библиотеки ###
 Вы также можете расширить стандарный функционал библиотеки, например:
@@ -88,7 +104,7 @@ TPL.setIfBlock('first', false);
 ### Итерация ###
 
 ```html
- <dooli:iterate id="iterateWrap">
+<dooli:iterate id="iterateWrap">
     <div>я в цикле {count} раз. My name is {name}. I'm {age}.</div>
 </dooli:iterate>
 ```
