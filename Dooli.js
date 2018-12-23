@@ -150,13 +150,20 @@
       return this;
     }
 
-    timer(timer, callback) {
+    timer(timer, callback, triggerEventTimer, triggerEvent) {
       const now = Math.floor(Date.now() / 1000);
       const timeEnd = now + timer;
       const _timer = setInterval(() => {
-        if (Math.floor(Date.now() / 1000) >= timeEnd && typeof callback === 'function') {
+        const time = Date.now() / 1000;
+        if (Math.floor(time) >= timeEnd && typeof callback === 'function') {
           clearInterval(_timer);
           callback();
+        }
+
+        if (Math.floor(time % triggerEventTimer) === 0) {
+          if (typeof triggerEvent === 'function') {
+            triggerEvent();
+          }
         }
       }, 1000);
 
