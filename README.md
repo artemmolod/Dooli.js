@@ -97,7 +97,7 @@ class MyDooli extends DooliObject {
 ```
 И нам надо продублировать содержимое контейнера dooli_object и заменить все {text} на что-то полезное, то это можно сделать так:
 ```javascript
-let tpl = new TPL_();
+let tpl = new TPL();
 tpl.init("dooli_tpl");
 tpl.each(2) //дублируем 2 раза
    .parse("text", "Hello!"); //заменяем {text} на Hello! 
@@ -115,7 +115,7 @@ tpl.each(2) //дублируем 2 раза
  
 Управлять условиями и переменными можно так:
 ```javascript
-TPL.setIfBlock('first', false);
+tpl.setIfBlock('first', false);
 ```
 
 В таком случае текст `Первое условие` отрендерен на странице не будет. Изменить значение переменной можно, передав вторым и третьим агрументом `true`.
@@ -128,7 +128,7 @@ TPL.setIfBlock('first', false);
 </dooli:iterate>
 ```
 ```javascript
-TPL.setIteration('iterateWrap', {
+tpl.setIteration('iterateWrap', {
     data: [
         {
             name: 'Artem',

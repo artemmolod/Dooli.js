@@ -7,6 +7,11 @@
 
   class DooliObject {
     constructor(selector, options = {}) {
+        if (typeof selector === 'object') {
+            this.el = selector;
+            return this;
+        }
+
         if (options.isTag) {
             this.el = document.getElementsByTagName(selector);
         } else {
@@ -38,7 +43,7 @@
     }
 
     html() {
-        if (arguments[0]) {
+        if (arguments[0] || arguments[0] === '') {
             this.el.innerHTML = arguments[0];
         }
 
@@ -139,13 +144,13 @@
             return this;
         }
 
-        this.el.addEventListener('click', callback.bind(context));
+        this.bindEvent('click', callback.bind(context));
 
         return this;
     }
 
     change(callback, context = this) {
-        this.el.addEventListener('change', callback.bind(context));
+        this.bindEvent('change', callback.bind(context));
 
         return this;
     }
@@ -165,8 +170,8 @@
                     if (typeof triggerEvent === 'function') {
                         timer--;
                         const func = () => {
-                            const leftDays = Math.floor(timer / 86400);
-                            const leftHours = Math.floor(timer / 3600);
+                            const leftDays    = Math.floor(timer / 86400);
+                            const leftHours   = Math.floor(timer / 3600);
                             const leftMinutes = Math.floor((timer / 60) % 60);
                             const leftSeconds = Math.floor(timer % 60);
 
@@ -215,33 +220,30 @@
             el.detachEvent(`on${event}`, ctx ? callback.bind(ctx) : callback);
         }
     }
+
+    each(callback) {
+        for (let i = 0; i < this.el.length; i++) {
+            callback.call(Array.prototype, Dooli(this.el[i]), i, this.el);
+        }
+    }
   }
 
-  class TPL_ {
+  class TPL {
 
     constructor() {
         this.cache = [];
     }
 
-    ge(id) {
-        return document.getElementById(id);
-    }
-
     init(selector) {
-        this.tpl = this.ge(selector) || document.querySelector(selector);
-        this.Dooli = new DooliObject();
+        this.tpl = Dooli(selector);
         if (this.tpl == null) {
             console.error(`Element with selector = ${selector} in DOM not found`);
             return this.tpl;
         }
     }
 
-    getContent(el) {
-        return el.innerHTML;
-    }
-
     setIteration(id, params = {}) {
-        this.tpl = this.ge(id);
+        this.tpl = Dooli(id);
         const count = params.data ? params.data.length : 1;
         this.parse('count', count);
 
@@ -249,7 +251,7 @@
             const data = params.data;
             let result = '';
             data.forEach((item) => {
-                let string = this.tpl.innerHTML;
+                let string = this.tpl.html();
                 const keys = Object.keys(item);
                 keys.forEach((key) => {
                     string = this.parseString(string, key, item[key]);
@@ -257,20 +259,19 @@
                 result += string;
             });
 
-            this.tpl.innerHTML = result;
+            this.tpl.html(result);
         }
     }
 
     setIfBlock(name, condition, isNotUpdate = false) {
-        const blocks = document.getElementsByTagName('dooli:if');
-        const keys = Object.keys(blocks);
+        const blocks = Dooli('dooli:if', { isTag: true });
         let el = null;
-        keys.forEach((key) => {
-            if (blocks[key].getAttribute('var') === name) {
-                el = blocks[key];
+        blocks.each((key) => {
+            if (key.get('var') === name) {
+                el = key;
                 if (!isNotUpdate && !this.cache[name]) {
                     this.cache[name] = {
-                        block: this.getContent(blocks[key]),
+                        block: key.html(),
                         condition: condition,
                     };
                 }
@@ -281,22 +282,22 @@
             return this;
         }
 
-        el.innerHTML = condition ? this.cache[name].block : '';
+        el.html(condition ? this.cache[name].block : '');
 
         return this;
     }
 
     each(count_parse_element) {
-        let string = this.tpl.innerHTML;
-        for (let i = 0; i++ < count_parse_element - 1; string += this.tpl.innerHTML);
-        this.tpl.innerHTML = string;
+        let string = this.tpl.html();
+        for (let i = 0; i++ < count_parse_element - 1; string += this.tpl.html());
+        this.tpl.html(string);
 
         return this;
     }
 
     parse(key, value) {
-        let string = this.tpl.innerHTML;
-        this.tpl.innerHTML = string.split("{" + key + "}").join(value);
+        let string = this.tpl.html().split("{" + key + "}").join(value);
+        this.tpl.html(string);
 
         return this;
     }
@@ -305,10 +306,6 @@
         return string.split("{" + key + "}").join(value);
     }
   }
-
-  window.TPL_ = (el) => {
-      return new TPL_(el);
-  };
 
   window.D = {};
 
@@ -370,6 +367,6 @@
   };
 
   window.DooliObject = DooliObject;
-  window.TPLObject = TPL_;
+  window.TPL = TPL;
 }(window));
 

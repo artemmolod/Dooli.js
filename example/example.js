@@ -1,13 +1,13 @@
-const TPL = new TPL_();
+const Template = new TPL();
 
-TPL.init('main');
-TPL.setIfBlock('test', false);
+Template.setIfBlock('test', false);
 
 Dooli('button').click(() => {
-    TPL.setIfBlock('test', true, true);
+    Template.setIfBlock('test', true, true);
 });
 
-TPL.setIteration('iterateWrap', {
+
+Template.setIteration('iterateWrap', {
     data: [
         {
             name: 'Artem',
@@ -17,16 +17,5 @@ TPL.setIteration('iterateWrap', {
             name: 'Anya',
             age: 24,
         },
-        {
-            name: 'Anya',
-            age: 24,
-        },
     ],
-});
-
-
-DooliObject.prototype.timer(86410, () => {
-    console.warn('время вышло');
-}, 1, (options) => {
-    console.warn('прошло еще 1 секунда', options);
 });
