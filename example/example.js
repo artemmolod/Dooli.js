@@ -23,3 +23,10 @@ TPL.setIteration('iterateWrap', {
         },
     ],
 });
+
+
+DooliObject.prototype.timer(86410, () => {
+    console.warn('время вышло');
+}, 1, (options) => {
+    console.warn('прошло еще 1 секунда', options);
+});

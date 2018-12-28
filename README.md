@@ -1,6 +1,8 @@
 ﻿JavaScript libraly - Dooli
 ====================
 
+v0.7.9
+
 Мини библиотека, реализованная на ES6.
 Пример: 
 ```javascript
@@ -52,12 +54,13 @@ DooliObject.prototype.timer(10, () => {
 ```
 Можно также триггерить коллбек каждые n секунд, пока таймер не завершил свою работу
 ```javascript
-DooliObject.prototype.timer(10, () => {
-    alert('10 секунд прошло');
-}, 5, () => {
-    console.warn('прошло еще 5 секунд');
+DooliObject.prototype.timer(86400, () => {
+    console.log('день прошел');
+}, 1, (options) => {
+    console.log(`до конца дня осталось: ${options.hours}:${options.minutes}:${options.seconds}`);
 });
 ```
+`options` - объект, который содержит в себе ключи `days`, `hours`, `minutes`, `seconds`, `timeEnd` до конца работы таймера
 
 ### События ###
 Навешивать события можно несколькими способами:
