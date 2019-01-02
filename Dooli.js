@@ -313,6 +313,13 @@
       return ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;;
   };
 
+  D.log = (msg) => {
+      const time_ = "[" + (new Date()).getHours() + ":" + (new Date()).getMinutes() + ":" + (new Date()).getSeconds() + "]";
+      const args = Array.prototype.slice.call(arguments);
+      args.unshift(time_);
+      console.log.apply(console, args);
+  };
+
   D.get = function(url) {
       return new Promise(function(success, reject){
           let xhr = new XMLHttpRequest();
