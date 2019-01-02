@@ -313,7 +313,7 @@
       return ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;;
   };
 
-  D.log = (msg) => {
+  D.log = function() {
       const time_ = "[" + (new Date()).getHours() + ":" + (new Date()).getMinutes() + ":" + (new Date()).getSeconds() + "]";
       const args = Array.prototype.slice.call(arguments);
       args.unshift(time_);
