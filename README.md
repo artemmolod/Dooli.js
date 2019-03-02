@@ -69,8 +69,8 @@ Dooli('button').click(callback);
 Dooli('button').addEvent('click', callback /*, context */);
 Dooli('button').bindEvent('click', callback /*, context */);
 Dooli('button').bindMulty({
-    'click': () => {},
-    'mousemove': () => {},
+    click: () => {},
+    mousemove: () => {},
 });
 ```
 
