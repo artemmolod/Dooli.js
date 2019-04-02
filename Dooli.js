@@ -6,6 +6,12 @@
     };
 
     class DooliObject {
+        /**
+         * @constructor
+         * @param selector
+         * @param options
+         * @returns {DooliObject}
+         */
         constructor(selector, options = {}) {
             if (typeof selector === 'object') {
                 this.el = selector;
@@ -25,22 +31,41 @@
             return this;
         }
 
+        /**
+         * Возвращает node, коллекцию nodes или null
+         * @returns {*}
+         */
         obj() {
             return this.el;
         }
 
+        /**
+         * Возвращает первый node из коллекции
+         * @returns {DooliObject}
+         */
         first() {
             this.el = this.el[0];
 
             return this;
         }
 
+        /**
+         * Возвращает nodes по аттрибутам, не знаю зачем, так как Dooli(...) сделает тоже самое
+         * @param {string} attr - пример, [data-type='type']
+         * @param {boolean} flag - если true, то вернет коллекцию, иначе контекст
+         * @returns {DooliObject}
+         */
         getNodesByAttr(attr, flag) {
             this.el = document.querySelectorAll(attr);
 
             return flag ? document.querySelectorAll(attr) : this;
         }
 
+        /**
+         * Возвращает node элемент по его номеру из коллекции
+         * @param {number} i - порядковый номер
+         * @returns {DooliObject}
+         */
         num(i) {
             if (i >= this.el.length) i = 0;
             this.el = this.el[i];
@@ -48,6 +73,10 @@
             return this;
         }
 
+        /**
+         * Возврашает содержимое node контейнера
+         * @returns {*|string}
+         */
         html() {
             if (arguments[0] || arguments[0] === '') {
                 this.el.innerHTML = arguments[0];
@@ -56,6 +85,11 @@
             return this.el.innerHTML;
         }
 
+        /**
+         * Применяет css стили к элементу
+         * @param rest - "color: #F00", "font-size: 23px"
+         * @returns {DooliObject}
+         */
         css(...rest) {
             for (let i = 0; i < rest.length; i++) {
                 let style_name = rest[i].toLowerCase().split(":")[0];
@@ -66,28 +100,51 @@
             return this;
         }
 
+        /**
+         * Добавляет css классы, пример "test", "test-new-dooli"
+         * @param rest
+         * @returns {DooliObject}
+         */
         addClass(...rest) {
             for (let i = 0; i++ < rest.length; this.el.classList.add(rest[i - 1]));
 
             return this;
         }
 
+        /**
+         * Удаляет css классы, пример "test", "test-new-dooli"
+         * @param rest
+         * @returns {DooliObject}
+         */
         removeClass(...rest) {
             for (let i = 0; i++ < rest.length; this.el.classList.remove(rest[i - 1]));
 
             return this;
         }
 
+        /**
+         * Клонирует node элемент
+         * @returns {ActiveX.IXMLDOMNode | Node}
+         */
         clone() {
             return this.el.cloneNode(true);
         }
 
+        /**
+         * Навешивает фокус
+         * @returns {DooliObject}
+         */
         focus() {
             this.el.focus();
 
             return this;
         }
 
+        /**
+         * Устанавливает различные аттрибуты, например, "data-type=0", "data-start=hi!"
+         * @param rest
+         * @returns {DooliObject}
+         */
         attr(...rest) {
             for (let i = 0; i < rest.length; i++) {
                 let attr_ = rest[i].toLowerCase().split("=")[0];
@@ -98,6 +155,11 @@
             return this;
         }
 
+        /**
+         * Возвращает значение аттрибута или массив значений
+         * @param rest
+         * @returns {*}
+         */
         get(...rest) {
             if (rest.length === 1) {
                 return this.el.getAttribute(rest[0]);
@@ -107,42 +169,76 @@
             }
         }
 
+        /**
+         * Вставляет несколько node узлов в конец
+         * @param rest
+         */
         append(...rest) {
             for (let i = 0; i < rest.length; i++) {
                 this.el.appendChild(rest[i]);
             }
         }
 
+        /**
+         * Вставляет несколько node узлов в начало
+         * @param rest
+         */
         prepend(...rest) {
             for (let i = 0; i < rest.length; i++) {
                 this.el.insertBefore(rest[i], this.el.firstChild);
             }
         }
 
+        /**
+         * Возвращает массив размером width, height
+         * @returns {*[]}
+         */
         size() {
             return [this.el.offsetWidth, this.el.offsetHeight];
         }
 
+        /**
+         * Возвращает offsetWidth
+         * @returns {*}
+         */
         width() {
             return this.size()[0];
         }
 
+        /**
+         * Возвращает offsetHeight
+         * @returns {*}
+         */
         height() {
             return this.size()[1];
         }
 
+        /**
+         * Добавляет display: none
+         * @returns {DooliObject}
+         */
         hide() {
             this.css("display:none");
 
             return this;
         }
 
+        /**
+         * Добавляет display: block
+         * @returns {DooliObject}
+         */
         show() {
             this.css("display: block");
 
             return this;
         }
 
+        /**
+         * Обработчик клика на элемент
+         * @param callback - коллбек при клике
+         * @param context - контекст для коллбека
+         * @returns {DooliObject}
+         */
         click(callback, context = this) {
             const args = Array.prototype.slice.call(arguments);
             if (!args.length) {
@@ -155,12 +251,26 @@
             return this;
         }
 
+        /**
+         * Обработчик события для элемента
+         * @param callback - коллбек при клике
+         * @param context - контекст для коллбека
+         * @returns {DooliObject}
+         */
         change(callback, context = this) {
             this.bindEvent('change', callback.bind(context));
 
             return this;
         }
 
+        /**
+         * Таймер
+         * @param timer - время в секундах
+         * @param callback - коллбек при завершении таймера
+         * @param triggerEventTimer - флаг триггера, чтобы вызвать triggerEvent каждую сек
+         * @param triggerEvent - коллбек для триггера, срабатывает каждую сек
+         * @returns {object} - с полями days, hours, minutes, seconds, timeEnd
+         */
         timer(timer, callback, triggerEventTimer, triggerEvent) {
             const now = Math.floor(Date.now() / 1000);
             const timeEnd = now + timer;
@@ -199,16 +309,34 @@
             return this;
         }
 
+        /**
+         * Навешивает коллбек на событие, удаляю такие же текущие
+         * @param event - событие, пример, click, change, mousemove ...
+         * @param callback - callback
+         * @param ctx - context для коллбека
+         */
         bindEvent(event, callback, ctx) {
             this.removeEvent(event, callback, ctx);
             this.addEvent(event, callback, ctx);
         }
 
+        /**
+         * Навешивает несколько коллбеков на события
+         * @param el - элемент, которые слушаем
+         * @param items - {object}. Пример, { click: () => { alert() }, mousemove: () => {} }
+         * @param context
+         */
         bindMylty(el, items, context) {
             const keys = Object.keys(items);
             keys.forEach((key) => this.bindEvent(key, items[key], context));
         }
 
+        /**
+         * Добавляем коллбек на событие
+         * @param event
+         * @param callback
+         * @param ctx
+         */
         addEvent(event, callback, ctx) {
             const el = this.obj();
             if (window.addEventListener) {
