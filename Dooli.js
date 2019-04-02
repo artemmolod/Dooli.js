@@ -18,6 +18,11 @@
                 return this;
             }
 
+            if (selector === document) {
+                this.el = document;
+                return this;
+            }
+
             if (options.isTag) {
                 this.el = document.getElementsByTagName(selector);
             } else {
@@ -326,7 +331,7 @@
          * @param items - {object}. Пример, { click: () => { alert() }, mousemove: () => {} }
          * @param context
          */
-        bindMylty(el, items, context) {
+        bindMultiple(el, items, context) {
             const keys = Object.keys(items);
             keys.forEach((key) => this.bindEvent(key, items[key], context));
         }
@@ -459,15 +464,15 @@
         return ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;;
     };
 
-    D.log = function() {
+    D.log = () => {
         const time_ = "[" + (new Date()).getHours() + ":" + (new Date()).getMinutes() + ":" + (new Date()).getSeconds() + "]";
         const args = Array.prototype.slice.call(arguments);
         args.unshift(time_);
         console.log.apply(console, args);
     };
 
-    D.get = function(url) {
-        return new Promise(function(success, reject){
+    D.get = (url) => {
+        return new Promise((success, reject) => {
             let xhr = new XMLHttpRequest();
             xhr.open("GET", url);
             xhr.onreadystatechange = function() {
@@ -482,8 +487,8 @@
         });
     };
 
-    D.post = function(url, data) {
-        return new Promise(function(success, reject){
+    D.post = (url, data) => {
+        return new Promise((success, reject) => {
             let xhr = new XMLHttpRequest();
 
             xhr.open("POST", url);
@@ -509,9 +514,66 @@
         });
     };
 
-    D.rand = function(min, max) {
+    D.rand = (min, max) => {
         return Math.floor(Math.random() * (max - min + 1) + min);
     };
+
+    D.time = () => {
+        return Math.floor(+new Date() / 1000);
+    };
+
+    /**
+     * Тачи
+     * @type {{}}
+     */
+    D.touch = {};
+    D.touch.SENSITIVITY_X = 160;
+    D.touch.SENSITIVITY_Y = 160;
+    D.touch.callbacks = {
+        callbackTouchTop:    () => console.log('Верхний тач'),
+        callbackTouchLeft:   () => console.log('Левый тач'),
+        callbackTouchBottom: () => console.log('Нижний тач'),
+        callbackTouchRight:  () => console.log('Правый тач'),
+    };
+    D.touch.isEnabledTouchEvent = () => !!('ontouchstart' in window);
+    D.touch.onStart = function(event) {
+        event  = event || window.event;
+        D.touch.startPoint = event.changedTouches[0];
+    };
+    D.touch.onEnded = function(event) {
+        event  = event || window.event;
+        D.touch.endPoint = event.changedTouches[0];
+        const coordsX = Math.abs(D.touch.startPoint.pageX - D.touch.endPoint.pageX);
+        const coordsY = Math.abs(D.touch.startPoint.pageY - D.touch.endPoint.pageY);
+
+        if (coordsX > D.touch.SENSITIVITY_X || coordsY > D.touch.SENSITIVITY_Y) {
+            if (coordsX > coordsY) {
+                if (D.touch.endPoint.pageX < D.touch.startPoint.pageX) {
+                    if (typeof D.touch.callbacks.callbackTouchLeft === 'function') {
+                        D.touch.callbacks.callbackTouchLeft();
+                    }
+                } else {
+                    if (typeof D.touch.callbacks.callbackTouchRight === 'function') {
+                        D.touch.callbacks.callbackTouchRight();
+                    }
+                }
+            } else {
+                if (D.touch.endPoint.pageY < D.touch.startPoint.pageY) {
+                    if (typeof D.touch.callbacks.callbackTouchTop === 'function') {
+                        D.touch.callbacks.callbackTouchTop();
+                    }
+                } else {
+                    if (typeof D.touch.callbacks.callbackTouchBottom === 'function') {
+                        D.touch.callbacks.callbackTouchBottom();
+                    }
+                }
+            }
+        }
+    };
+    Dooli(document).bindMultiple(null, {
+        touchstart: D.touch.onStart.bind(this),
+        touchend: D.touch.onEnded.bind(this),
+    });
 
     window.DooliObject = DooliObject;
     window.TPL = TPL;

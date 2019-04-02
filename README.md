@@ -42,7 +42,7 @@ Dooli("dooli")
 | addEvent | добавляем событие к элементу | `el (or null)` - куда вешаем событие<br/> `event` - название события (click, mousemove), `callback` - обработчик клика, `context` - контекст для обработчкика |
 | removeEvent | удаляем событие у элемента | `el (or null)` - элемент<br/> `event` - название события (click, mousemove), `callback` - обработчик клика, `context` - контекст для обработчкика |
 | bindEvent | применяет `removeEvent` и `addEvent` с таким же числом параметров |
-| bindMulty | применяет несколько обработчиков на элемент | `el (or null)`, `object` - объект событий с ключем названия ивента и его обработчиком |
+| bindMultiple | применяет несколько обработчиков на элемент | `el (or null)`, `object` - объект событий с ключем названия ивента и его обработчиком |
 
 Методы, которые не возвращают результата можно чейнить.
 
@@ -69,7 +69,7 @@ DooliObject.prototype.timer(86400, () => {
 Dooli('button').click(callback);
 Dooli('button').addEvent('click', callback /*, context */);
 Dooli('button').bindEvent('click', callback /*, context */);
-Dooli('button').bindMulty({
+Dooli('button').bindMultiple({
     click: () => {},
     mousemove: () => {},
 });
