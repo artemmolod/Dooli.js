@@ -35,6 +35,12 @@
             return this;
         }
 
+        getNodesByAttr(attr, flag) {
+            this.el = document.querySelectorAll(attr);
+
+            return flag ? document.querySelectorAll(attr) : this;
+        }
+
         num(i) {
             if (i >= this.el.length) i = 0;
             this.el = this.el[i];
@@ -198,9 +204,9 @@
             this.addEvent(event, callback, ctx);
         }
 
-        bindMylty(el, items) {
+        bindMylty(el, items, context) {
             const keys = Object.keys(items);
-            keys.forEach((key) => this.bindEvent(key, items[key]));
+            keys.forEach((key) => this.bindEvent(key, items[key], context));
         }
 
         addEvent(event, callback, ctx) {
@@ -276,6 +282,19 @@
                     }
                 }
             });
+
+            if (!el) {
+                const nodes = Dooli().getNodesByAttr(`[dooli-if-var="${name}"]`);
+                nodes.each((node) => {
+                    el = node;
+                    if (!isNotUpdate && !this.cache[name]) {
+                        this.cache[name] = {
+                            block: node.html(),
+                            condition: condition,
+                        };
+                    }
+                });
+            }
 
             if (!this.cache[name]) {
                 return this;

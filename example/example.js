@@ -1,6 +1,7 @@
 const Template = new TPL();
 
 Template.setIfBlock('test', false);
+Template.setIfBlock('var', false);
 
 Dooli('button').click(() => {
     Template.setIfBlock('test', true, true);
@@ -18,4 +19,8 @@ Template.setIteration('iterateWrap', {
             age: 24,
         },
     ],
+});
+
+Dooli('second_button').click(() => {
+    Template.setIfBlock('var', true, true);
 });
