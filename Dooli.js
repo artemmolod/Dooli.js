@@ -1,4 +1,4 @@
-;(function(window){
+(function(window){
     "use strict";
 
     window.Dooli = (selector, options = {}) => {
@@ -269,52 +269,6 @@
         }
 
         /**
-         * Таймер
-         * @param timer - время в секундах
-         * @param callback - коллбек при завершении таймера
-         * @param triggerEventTimer - флаг триггера, чтобы вызвать triggerEvent каждую сек
-         * @param triggerEvent - коллбек для триггера, срабатывает каждую сек
-         * @returns {object} - с полями days, hours, minutes, seconds, timeEnd
-         */
-        timer(timer, callback, triggerEventTimer, triggerEvent) {
-            const now = Math.floor(Date.now() / 1000);
-            const timeEnd = now + timer;
-            const _timer = setInterval(() => {
-                const time = Date.now() / 1000;
-                if (Math.floor(time) >= timeEnd && typeof callback === 'function') {
-                    clearInterval(_timer);
-                    callback();
-                }
-
-                if (triggerEventTimer) {
-                    if (Math.floor(time % triggerEventTimer) === 0) {
-                        if (typeof triggerEvent === 'function') {
-                            timer--;
-                            const func = () => {
-                                const leftDays    = Math.floor(timer / 86400);
-                                const leftHours   = Math.floor(timer / 3600);
-                                const leftMinutes = Math.floor((timer / 60) % 60);
-                                const leftSeconds = Math.floor(timer % 60);
-
-                                return {
-                                    days: leftDays,
-                                    hours: leftHours,
-                                    minutes: leftMinutes,
-                                    seconds: leftSeconds,
-                                    timeEnd: timeEnd
-                                };
-                            };
-                            const options = func();
-                            triggerEvent(options);
-                        }
-                    }
-                }
-            }, 1000);
-
-            return this;
-        }
-
-        /**
          * Навешивает коллбек на событие, удаляю такие же текущие
          * @param event - событие, пример, click, change, mousemove ...
          * @param callback - callback
@@ -514,18 +468,65 @@
         });
     };
 
-    D.rand = (min, max) => {
+    D.utils = {};
+    D.utils.getType = (ctx) => Object.prototype.toString.call(ctx);
+
+    D.math = {};
+    D.math.rand = (min, max) => {
         return Math.floor(Math.random() * (max - min + 1) + min);
     };
 
-    D.time = () => {
-        return Math.floor(+new Date() / 1000);
+    D.time = {};
+    D.time.getTime = (timestamp) => Math.floor(+new Date() / 1000) + (timestamp || 0);
+    D.time.getRelativeDate = (timestamp) => {
+        timestamp = timestamp * 1000;
+        const DateObject = new Date(timestamp);
+        const date = DateObject.toISOString().replace(/^([^T]+)T(.+)$/,'$1').replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
+
+        return date;
+    };
+    D.time.getTimestamp = (date) => Math.floor((new Date(date)).getTime() / 1000);
+    D.time.timer = (timer, callback, triggerEventTimer, triggerEvent) => {
+        const now = Math.floor(Date.now() / 1000);
+        const timeEnd = now + timer;
+        const _timer = setInterval(() => {
+            const time = Date.now() / 1000;
+            if (Math.floor(time) >= timeEnd && typeof callback === 'function') {
+                clearInterval(_timer);
+                callback();
+            }
+
+            if (triggerEventTimer) {
+                if (Math.floor(time % triggerEventTimer) === 0) {
+                    if (typeof triggerEvent === 'function') {
+                        timer--;
+                        const func = () => {
+                            let leftDays    = Math.floor(timer / 86400);
+                            let leftHours   = Math.floor(timer / 3600);
+                            let leftMinutes = Math.floor((timer / 60) % 60);
+                            let leftSeconds = Math.floor(timer % 60);
+
+                            if (leftDays < 10)    leftDays = `0${leftDays}`;
+                            if (leftHours < 10)   leftHours = `0${leftHours}`;
+                            if (leftMinutes < 10) leftMinutes = `0${leftMinutes}`;
+                            if (leftSeconds < 10) leftSeconds = `0${leftSeconds}`;
+
+                            return {
+                                days: leftDays,
+                                hours: leftHours,
+                                minutes: leftMinutes,
+                                seconds: leftSeconds,
+                                timeEnd: timeEnd
+                            };
+                        };
+                        const options = func();
+                        triggerEvent(options);
+                    }
+                }
+            }
+        }, 1000);
     };
 
-    /**
-     * Тачи
-     * @type {{}}
-     */
     D.touch = {};
     D.touch.SENSITIVITY_X = 160;
     D.touch.SENSITIVITY_Y = 160;
@@ -559,17 +560,18 @@
                 }
             } else {
                 if (D.touch.endPoint.pageY < D.touch.startPoint.pageY) {
-                    if (typeof D.touch.callbacks.callbackTouchTop === 'function') {
-                        D.touch.callbacks.callbackTouchTop();
-                    }
-                } else {
                     if (typeof D.touch.callbacks.callbackTouchBottom === 'function') {
                         D.touch.callbacks.callbackTouchBottom();
+                    }
+                } else {
+                    if (typeof D.touch.callbacks.callbackTouchTop === 'function') {
+                        D.touch.callbacks.callbackTouchTop();
                     }
                 }
             }
         }
     };
+
     Dooli(document).bindMultiple(null, {
         touchstart: D.touch.onStart.bind(this),
         touchend: D.touch.onEnded.bind(this),

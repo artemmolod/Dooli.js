@@ -7,7 +7,6 @@ Dooli('button').click(() => {
     Template.setIfBlock('test', true, true);
 });
 
-
 Template.setIteration('iterateWrap', {
     data: [
         {

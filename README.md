@@ -38,7 +38,6 @@ Dooli("dooli")
 | append | добавляет 1 или несколько элементов в конец блока | параметры через запятую |
 | click | устанавливает или вызывает обработчик элемента | `type` - тип события<br/> `callback` - коллбек<br/> `context` - контекст коллбека, если не указан, то принимает внутренний контекст |
 | clone | клонирует элемент | не требует |
-| timer | добавляет таймер и вызывает коллбек по его совершению | `timer` - время в секундах<br/> `callback` - коллбек |
 | addEvent | добавляем событие к элементу | `el (or null)` - куда вешаем событие<br/> `event` - название события (click, mousemove), `callback` - обработчик клика, `context` - контекст для обработчкика |
 | removeEvent | удаляем событие у элемента | `el (or null)` - элемент<br/> `event` - название события (click, mousemove), `callback` - обработчик клика, `context` - контекст для обработчкика |
 | bindEvent | применяет `removeEvent` и `addEvent` с таким же числом параметров |
@@ -49,13 +48,13 @@ Dooli("dooli")
 ### Таймер ###
 Чтобы установить таймер на 10 секунд, достаточно сделать так:
 ```javascript
-DooliObject.prototype.timer(10, () => {
+D.time.timer(10, () => {
     alert('10 секунд прошло');
 });
 ```
 Можно также триггерить коллбек каждые n секунд, пока таймер не завершил свою работу
 ```javascript
-DooliObject.prototype.timer(86400, () => {
+D.time.timer(86400, () => {
     console.log('день прошел');
 }, 1, (options) => {
     console.log(`до конца дня осталось: ${options.hours}:${options.minutes}:${options.seconds}`);
@@ -79,7 +78,7 @@ Dooli('button').bindMultiple({
 Вы также можете расширить стандарный функционал библиотеки, например:
 
 ```javascript
-//наследуемся
+// наследуемся
 class MyDooli extends DooliObject {
   html() {
     console.log("Ваша реализация метода HTML");
@@ -89,6 +88,19 @@ class MyDooli extends DooliObject {
 //и используем
 (new MyDooli("element_id")).html();
 ```
+Расширение модулей:
+```javascript
+// Создаем новый модуль
+D.myModule = {};
+D.myModule.sayHi = () => alert('Привет!');
+
+// Расширяем существующий
+D.touch.SENSITIVITY_X = 200; // меняем чувствительность тача
+D.touch.callbacks.callbackTouchBottom = () => {
+    // создаем свой обработчик свайпа снизу вверх
+};
+```
+
 ### Шаблонизатор ###
 Пример, есть такая разметка:
 ```html 
@@ -106,6 +118,7 @@ tpl.each(2) //дублируем 2 раза
 
 Результат будет таким:
 > Hello!
+
 > Hello!
 
 ### Условия ###
