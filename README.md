@@ -3,6 +3,11 @@
 
 v1.0
 
+###install
+```bash
+npm i dooli
+```
+
 Мини библиотека, реализованная на ES6.
 Пример: 
 ```javascript
