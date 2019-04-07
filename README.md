@@ -3,7 +3,7 @@
 
 v1.0
 
-###install
+### install
 ```bash
 npm i dooli
 ```
