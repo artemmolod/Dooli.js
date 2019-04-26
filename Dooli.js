@@ -128,6 +128,24 @@
         }
 
         /**
+         * Возвращает true/false если элемент содержит один или несколько нужных css классов
+         * Последним аргументом передаем:
+         * true - если все классы содержит
+         * false - один класс содержит (по умолчанию)
+         * @param rest
+         */
+        hasClass(...rest) {
+            let flag = rest.pop();
+            const isBool = Object.prototype.toString.call(flag) === '[object Boolean]';
+
+            if (!isBool) flag = false;
+
+            const callback = (item) => this.el.classList.contains(item);
+
+            return flag ? rest.every(callback) : rest.some(callback);
+        }
+
+        /**
          * Клонирует node элемент
          * @returns {ActiveX.IXMLDOMNode | Node}
          */
@@ -239,6 +257,18 @@
         }
 
         /**
+         * Событие ховера на элементе
+         * @param {function} mouseenter - курсор в пределах элемента
+         * @param {function} mouseleave - курсор за пределами элемента
+         */
+        hover(mouseenter, mouseleave) {
+            this.bindMultiple({
+                mouseenter: mouseenter,
+                mouseleave: mouseleave,
+            });
+        }
+
+        /**
          * Обработчик клика на элемент
          * @param callback - коллбек при клике
          * @param context - контекст для коллбека
@@ -281,11 +311,10 @@
 
         /**
          * Навешивает несколько коллбеков на события
-         * @param el - элемент, которые слушаем
          * @param items - {object}. Пример, { click: () => { alert() }, mousemove: () => {} }
          * @param context
          */
-        bindMultiple(el, items, context) {
+        bindMultiple(items, context) {
             const keys = Object.keys(items);
             keys.forEach((key) => this.bindEvent(key, items[key], context));
         }
@@ -414,15 +443,32 @@
 
     window.D = {};
 
-    D.xhr = ()=> {
+    D.xhr = () => {
         return ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;;
     };
 
-    D.log = () => {
-        const time_ = "[" + (new Date()).getHours() + ":" + (new Date()).getMinutes() + ":" + (new Date()).getSeconds() + "]";
-        const args = Array.prototype.slice.call(arguments);
-        args.unshift(time_);
-        console.log.apply(console, args);
+    D.getTimeConsoleFormat = () => {
+        return "[" + (new Date()).getHours() + ":" + (new Date()).getMinutes() + ":" + (new Date()).getSeconds() + "]";
+    };
+
+    D.console = {};
+    D.console.log  = () => D.warn('Please use D.log');
+    D.console.warn = () => D.warn('Please use D.warn');
+    D.console.err  = () => D.warn('Please use D.err');
+
+    D.log = (...rest) => {
+        rest.unshift(D.getTimeConsoleFormat());
+        console.log.apply(console, rest);
+    };
+
+    D.warn = (...rest) => {
+        rest.unshift(D.getTimeConsoleFormat());
+        console.warn.apply(console, rest);
+    };
+
+    D.err = (...rest) => {
+        rest.unshift(D.getTimeConsoleFormat());
+        console.error.apply(console, rest);
     };
 
     D.get = (url) => {
@@ -572,7 +618,7 @@
         }
     };
 
-    Dooli(document).bindMultiple(null, {
+    Dooli(document).bindMultiple({
         touchstart: D.touch.onStart.bind(this),
         touchend: D.touch.onEnded.bind(this),
     });

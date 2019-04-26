@@ -1,7 +1,7 @@
 ﻿JavaScript libraly - Dooli
 ====================
 
-v1.0
+v1.0.2
 
 ### install
 ```bash
