@@ -1,7 +1,7 @@
 ﻿JavaScript libraly - Dooli
 ====================
 
-v1.0
+v1.0.4
 
 ### install
 ```bash
@@ -84,7 +84,7 @@ Dooli('button').bindMultiple({
 
 ```javascript
 // наследуемся
-class MyDooli extends DooliObject {
+class MyDooli extends DooliAbstract {
   html() {
     console.log("Ваша реализация метода HTML");
   }

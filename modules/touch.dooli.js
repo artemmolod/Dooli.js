@@ -43,7 +43,7 @@ touch.onEnded = function(event) {
     }
 };
 
-Dooli(document).bindMultiple(null, {
+Dooli(document).bindMultiple({
     touchstart: touch.onStart.bind(this),
     touchend: touch.onEnded.bind(this),
 });

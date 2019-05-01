@@ -1,7 +1,8 @@
 {
   "name": "dooli",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Javascript library",
+  "keywords": ["javascript", "library", "browser"],
   "main": "Dooli.js",
   "directories": {
     "example": "example"
