@@ -84,7 +84,7 @@ Dooli('button').bindMultiple({
 
 ```javascript
 // наследуемся
-class MyDooli extends DooliObject {
+class MyDooli extends DooliAbstract {
   html() {
     console.log("Ваша реализация метода HTML");
   }

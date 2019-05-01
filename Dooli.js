@@ -1,39 +1,69 @@
 (function(window){
     "use strict";
 
-    window.Dooli = (selector, options = {}) => {
-        return new DooliObject(selector, options);
+    window.Dooli = window.Di = (selector, options = {}) => {
+        return new DooliAbstract(selector, options);
     };
 
-    class DooliObject {
+    class DooliAbstract {
         /**
          * @constructor
          * @param selector
          * @param options
-         * @returns {DooliObject}
+         * @returns {DooliAbstract}
          */
         constructor(selector, options = {}) {
-            if (typeof selector === 'object') {
-                this.el = selector;
-                return this;
-            }
-
-            if (selector === document) {
-                this.el = document;
-                return this;
-            }
-
-            if (options.isTag) {
+            if (selector && selector.includes && selector.includes('dooli:')) {
                 this.el = document.getElementsByTagName(selector);
+            } else if (typeof selector === 'object') {
+                this.el = selector;
             } else {
-                this.el = document.getElementById(selector);
-            }
-
-            if (!this.el) {
                 this.el = document.querySelectorAll(selector);
+                if (this.el.length === 1) {
+                    this.el = this.el[0];
+                }
             }
 
             return this;
+        }
+
+        /**
+         * Создает новый элемент по правилам
+         * @param {object}  options
+         * @param {string}  options.tag - тег нового элемента
+         * @param {number}  options.id - id нового элемента
+         * @param {string}  options.classes - css классы через запятую
+         * @param {string}  options.html - содержимое элемента
+         * @param {object}  options.events - слушаемые событие, пример, events: { click: () => {} }
+         * @param {object}  options.wrap - куда вставить элемент
+         * @param {object}  options.wrap.node - родительский элемент
+         * @param {boolean} options.wrap.isBefore - флаг, если вставлять в начало родителя
+         *
+         * @returns {DooliAbstract}
+         */
+        create(options) {
+            this.el = document.createElement(options.tag);
+
+            if (options.classes) this.addClass(...options.classes.split(','));
+            if (options.id)      this.attr(`id=${options.id}`);
+            if (options.html)    this.html(options.html);
+            if (options.events)  this.bindMultiple(options.events);
+            if (options.wrap)    this._addElementToParentNode(options.wrap);
+
+            return this;
+        }
+
+        /**
+         * Добавляет элемент в узел
+         * @param options
+         * @private
+         */
+        _addElementToParentNode(options) {
+            if (options.isBefore) {
+                options.node.insertBefore(this.el, options.node.firstChild);
+            } else {
+                options.node.appendChild(this.el);
+            }
         }
 
         /**
@@ -46,7 +76,7 @@
 
         /**
          * Возвращает первый node из коллекции
-         * @returns {DooliObject}
+         * @returns {DooliAbstract}
          */
         first() {
             this.el = this.el[0];
@@ -58,7 +88,7 @@
          * Возвращает nodes по аттрибутам, не знаю зачем, так как Dooli(...) сделает тоже самое
          * @param {string} attr - пример, [data-type='type']
          * @param {boolean} flag - если true, то вернет коллекцию, иначе контекст
-         * @returns {DooliObject}
+         * @returns {DooliAbstract}
          */
         getNodesByAttr(attr, flag) {
             this.el = document.querySelectorAll(attr);
@@ -69,7 +99,7 @@
         /**
          * Возвращает node элемент по его номеру из коллекции
          * @param {number} i - порядковый номер
-         * @returns {DooliObject}
+         * @returns {DooliAbstract}
          */
         num(i) {
             if (i >= this.el.length) i = 0;
@@ -90,10 +120,22 @@
             return this.el.innerHTML;
         }
 
+        val(value) {
+            if (value && value.length) {
+                this.el.value = value;
+            }
+
+            return this.el.value;
+        }
+
+        valLength() {
+            return this.val().length;
+        }
+
         /**
          * Применяет css стили к элементу
          * @param rest - "color: #F00", "font-size: 23px"
-         * @returns {DooliObject}
+         * @returns {DooliAbstract}
          */
         css(...rest) {
             for (let i = 0; i < rest.length; i++) {
@@ -108,7 +150,7 @@
         /**
          * Добавляет css классы, пример "test", "test-new-dooli"
          * @param rest
-         * @returns {DooliObject}
+         * @returns {DooliAbstract}
          */
         addClass(...rest) {
             for (let i = 0; i++ < rest.length; this.el.classList.add(rest[i - 1]));
@@ -119,7 +161,7 @@
         /**
          * Удаляет css классы, пример "test", "test-new-dooli"
          * @param rest
-         * @returns {DooliObject}
+         * @returns {DooliAbstract}
          */
         removeClass(...rest) {
             for (let i = 0; i++ < rest.length; this.el.classList.remove(rest[i - 1]));
@@ -155,7 +197,7 @@
 
         /**
          * Навешивает фокус
-         * @returns {DooliObject}
+         * @returns {DooliAbstract}
          */
         focus() {
             this.el.focus();
@@ -166,7 +208,7 @@
         /**
          * Устанавливает различные аттрибуты, например, "data-type=0", "data-start=hi!"
          * @param rest
-         * @returns {DooliObject}
+         * @returns {DooliAbstract}
          */
         attr(...rest) {
             for (let i = 0; i < rest.length; i++) {
@@ -238,7 +280,7 @@
 
         /**
          * Добавляет display: none
-         * @returns {DooliObject}
+         * @returns {DooliAbstract}
          */
         hide() {
             this.css("display:none");
@@ -248,7 +290,7 @@
 
         /**
          * Добавляет display: block
-         * @returns {DooliObject}
+         * @returns {DooliAbstract}
          */
         show() {
             this.css("display: block");
@@ -266,13 +308,15 @@
                 mouseenter: mouseenter,
                 mouseleave: mouseleave,
             });
+
+            return this;
         }
 
         /**
          * Обработчик клика на элемент
          * @param callback - коллбек при клике
          * @param context - контекст для коллбека
-         * @returns {DooliObject}
+         * @returns {DooliAbstract}
          */
         click(callback, context = this) {
             const args = Array.prototype.slice.call(arguments);
@@ -290,7 +334,7 @@
          * Обработчик события для элемента
          * @param callback - коллбек при клике
          * @param context - контекст для коллбека
-         * @returns {DooliObject}
+         * @returns {DooliAbstract}
          */
         change(callback, context = this) {
             this.bindEvent('change', callback.bind(context));
@@ -347,6 +391,23 @@
             for (let i = 0; i < this.el.length; i++) {
                 callback.call(Array.prototype, Dooli(this.el[i]), i, this.el);
             }
+        }
+
+        animate(options) {
+            const start = performance.now();
+
+            requestAnimationFrame(function animate(time) {
+                let timeFraction = (time - start) / options.duration;
+                if (timeFraction > 1) timeFraction = 1;
+
+                const progress = options.timing(timeFraction);
+
+                options.draw(progress);
+
+                if (timeFraction < 1) {
+                    requestAnimationFrame(animate);
+                }
+            });
         }
     }
 
@@ -514,6 +575,18 @@
         });
     };
 
+    D.animate = {};
+    D.animate.quad = (fraction) => Math.pow(fraction, 2);
+    D.animate.arc  = (fraction) => 1 - Math.sin(Math.acos(fraction));
+    D.animate.back = (x, fraction) => Math.pow(fraction, 2) * ((x + 1) * fraction - x);
+    D.animate.bounce = (fraction) => {
+        for (let a = 0, b = 1; 1; a += b, b /= 2) {
+            if (fraction >= (7 - 4 * a) / 11) {
+                return -Math.pow((11 - 6 * a - 11 * fraction) / 4, 2) + Math.pow(b, 2);
+            }
+        }
+    };
+
     D.utils = {};
     D.utils.getType = (ctx) => Object.prototype.toString.call(ctx);
 
@@ -623,7 +696,7 @@
         touchend: D.touch.onEnded.bind(this),
     });
 
-    window.DooliObject = DooliObject;
+    window.DooliAbstract = DooliAbstract;
     window.TPL = TPL;
 }(window));
 
