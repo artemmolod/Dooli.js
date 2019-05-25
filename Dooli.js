@@ -409,6 +409,18 @@
                 }
             });
         }
+
+        findParent(cssClass) {
+            let el = this.el;
+            while (!el.classList.contains(cssClass)) {
+                el = el.parentNode;
+                if (!el.classList) {
+                    break;
+                }
+            }
+
+            return el;
+        }
     }
 
     class TPL {
@@ -532,23 +544,32 @@
         console.error.apply(console, rest);
     };
 
-    D.get = (url) => {
+    D.get = (url, headers) => {
         return new Promise((success, reject) => {
             let xhr = new XMLHttpRequest();
             xhr.open("GET", url);
+
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     success(xhr.responseText);
                 }
             };
+
+            if (headers) {
+                Object.keys(headers).forEach((header) => {
+                    xhr.setRequestHeader(header, headers[header]);
+                });
+            }
+
             xhr.onerror = function() {
                 reject(new Error("Network Error"));
             };
+
             xhr.send(null);
         });
     };
 
-    D.post = (url, data) => {
+    D.post = (url, data, headers) => {
         return new Promise((success, reject) => {
             let xhr = new XMLHttpRequest();
 
@@ -564,6 +585,12 @@
             xhr.onerror = function() {
                 reject(new Error("Network Error"));
             };
+
+            if (headers) {
+                Object.keys(headers).forEach((header) => {
+                    xhr.setRequestHeader(header, headers[header]);
+                });
+            }
 
             let params = [];
             const keys = Object.keys(data);
@@ -620,21 +647,23 @@
                     if (typeof triggerEvent === 'function') {
                         timer--;
                         const func = () => {
-                            let leftDays    = Math.floor(timer / 86400);
-                            let leftHours   = Math.floor(timer / 3600);
-                            let leftMinutes = Math.floor((timer / 60) % 60);
-                            let leftSeconds = Math.floor(timer % 60);
+                            let days        = Math.floor(timer / 86400);
+                            let hoursLeft   = Math.floor((timer) - (days * 86400));
+                            let hours       = Math.floor(hoursLeft / 3600);
+                            let minutesLeft = Math.floor((hoursLeft) - (hours*3600));
+                            let minutes     = Math.floor(minutesLeft / 60);
+                            let seconds     = Math.floor(timer % 60);
 
-                            if (leftDays < 10)    leftDays = `0${leftDays}`;
-                            if (leftHours < 10)   leftHours = `0${leftHours}`;
-                            if (leftMinutes < 10) leftMinutes = `0${leftMinutes}`;
-                            if (leftSeconds < 10) leftSeconds = `0${leftSeconds}`;
+                            if (days < 10)    days = `0${days}`;
+                            if (hours < 10)   hours = `0${hours}`;
+                            if (minutes < 10) minutes = `0${minutes}`;
+                            if (seconds < 10) seconds = `0${seconds}`;
 
                             return {
-                                days: leftDays,
-                                hours: leftHours,
-                                minutes: leftMinutes,
-                                seconds: leftSeconds,
+                                days: days,
+                                hours: hours,
+                                minutes: minutes,
+                                seconds: seconds,
                                 timeEnd: timeEnd
                             };
                         };
