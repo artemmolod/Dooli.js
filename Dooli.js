@@ -569,7 +569,7 @@
         });
     };
 
-    D.post = (url, data, headers) => {
+    D.post = (url, data, headers, callbackProgressUpload) => {
         return new Promise((success, reject) => {
             let xhr = new XMLHttpRequest();
 
@@ -579,6 +579,15 @@
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     return success(xhr.responseText);
+                }
+            };
+
+            xhr.upload.onprogress = function(event) {
+                const total = event.total;
+                const load  = event.loaded;
+                const percent  = load / total * 100;
+                if (typeof callbackProgressUpload === 'function') {
+                    callbackProgressUpload(event, percent);
                 }
             };
 
