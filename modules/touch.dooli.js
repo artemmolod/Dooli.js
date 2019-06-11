@@ -48,4 +48,6 @@ Dooli(document).bindMultiple({
     touchend: touch.onEnded.bind(this),
 });
 
-export default touch;
+D.touch = touch;
+
+module.exports = D.touch;
