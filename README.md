@@ -1,7 +1,7 @@
 ﻿JavaScript libraly - Dooli
 ====================
 
-v1.0.4
+v1.9.3
 
 ### install
 ```bash
@@ -53,14 +53,14 @@ Dooli("dooli")
 ### Таймер ###
 Чтобы установить таймер на 10 секунд, достаточно сделать так:
 ```javascript
-const time = require('dooli/modules/template.dooli');
+const time = require('dooli/modules/time.dooli');
 time.timer(10, () => {
     alert('10 секунд прошло');
 });
 ```
 Можно также триггерить коллбек каждые n секунд, пока таймер не завершил свою работу
 ```javascript
-const time = require('dooli/modules/template.dooli');
+const time = require('dooli/modules/time.dooli');
 time.timer(86400, () => {
     console.log('день прошел');
 }, 1, (options) => {

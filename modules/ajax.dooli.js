@@ -61,7 +61,7 @@ D.ajax = (options) => {
         xhr.onerror   = (e) => reject(e);
         xhr.ontimeout = (e) => reject(e);
 
-        xhr.send(formData || (params.length && params) || null);
+        xhr.send(formData || (params.length && params.join('&')) || null);
     });
 };
 
