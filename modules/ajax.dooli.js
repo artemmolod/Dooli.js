@@ -33,7 +33,7 @@ D.ajax = (options) => {
                         const json = JSON.parse(xhr.responseText);
                         return success(json);
                     } catch (e) {
-                       return  reject(new Error(e.message));
+                       return reject(new Error(e.message));
                     }
                 }
 

@@ -53,13 +53,15 @@ Dooli("dooli")
 ### Таймер ###
 Чтобы установить таймер на 10 секунд, достаточно сделать так:
 ```javascript
-D.time.timer(10, () => {
+const time = require('dooli/modules/template.dooli');
+time.timer(10, () => {
     alert('10 секунд прошло');
 });
 ```
 Можно также триггерить коллбек каждые n секунд, пока таймер не завершил свою работу
 ```javascript
-D.time.timer(86400, () => {
+const time = require('dooli/modules/template.dooli');
+time.timer(86400, () => {
     console.log('день прошел');
 }, 1, (options) => {
     console.log(`до конца дня осталось: ${options.hours}:${options.minutes}:${options.seconds}`);
@@ -115,7 +117,8 @@ D.touch.callbacks.callbackTouchBottom = () => {
 ```
 И нам надо продублировать содержимое контейнера dooli_object и заменить все {text} на что-то полезное, то это можно сделать так:
 ```javascript
-let tpl = new TPL();
+const Template = require('dooli/modules/template.dooli');
+let tpl = new Template();
 tpl.init("dooli_tpl");
 tpl.each(2) //дублируем 2 раза
    .parse("text", "Hello!"); //заменяем {text} на Hello! 
