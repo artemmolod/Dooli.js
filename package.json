@@ -1,6 +1,6 @@
 {
   "name": "dooli",
-  "version": "1.9.3",
+  "version": "1.9.6",
   "description": "Javascript library",
   "keywords": ["javascript", "library", "browser"],
   "main": "Dooli.js",

@@ -14,7 +14,9 @@ D.ajax = (options) => {
         let xhr = new XMLHttpRequest();
 
         xhr.open(method || "get", url);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        if (!formData) {
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        }
 
         if (headers) {
             Object.keys(headers).forEach((header) => {
