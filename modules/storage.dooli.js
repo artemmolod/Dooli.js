@@ -1,8 +1,7 @@
-const utils = require('../modules/utils.dooli');
-const time = require('../modules/time.dooli');
-
 D.storage = {};
+
 D.storage.local = {};
+
 D.storage.local.set = function(key, value, options = {}) {
     if (D.storage.local.isLock(key)) {
         D.console.warn('Key has been locked');
@@ -28,6 +27,7 @@ D.storage.local.set = function(key, value, options = {}) {
 
     localStorage.setItem(key, JSON.stringify(value));
 };
+
 D.storage.local.get = function(key) {
     const object = JSON.parse(localStorage.getItem(key));
     if (!object) {
@@ -52,6 +52,7 @@ D.storage.local.get = function(key) {
 
     return value;
 };
+
 D.storage.local.isLock = function(key) {
     const object = JSON.parse(localStorage.getItem(key));
     if (!object) {
@@ -60,6 +61,7 @@ D.storage.local.isLock = function(key) {
 
     return object._dooli_options.isLock;
 };
+
 D.storage.local.setLock = function(key, isLock) {
     const object = JSON.parse(localStorage.getItem(key));
     if (!object) {
@@ -70,6 +72,7 @@ D.storage.local.setLock = function(key, isLock) {
 
     localStorage.setItem(key, JSON.stringify(object));
 };
+
 D.storage.local.remove = function(key) {
     if (D.storage.local.isLock(key)) {
         return D.console.warn('Key has been locked');
@@ -77,6 +80,7 @@ D.storage.local.remove = function(key) {
 
     localStorage.removeItem(key);
 };
+
 D.storage.local.getSize = function() {
     let size;
     let totalSize = 0;
