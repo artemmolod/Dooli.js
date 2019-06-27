@@ -34,6 +34,7 @@
          * @param {number}  options.id - id нового элемента
          * @param {string}  options.classes - css классы через запятую
          * @param {string}  options.html - содержимое элемента
+         * @param {string}  options.src - ссылка
          * @param {object}  options.events - слушаемые событие, пример, events: { click: () => {} }
          * @param {object}  options.wrap - куда вставить элемент
          * @param {object}  options.wrap.node - родительский элемент
@@ -49,6 +50,7 @@
             if (options.html)    this.html(options.html);
             if (options.events)  this.bindMultiple(options.events);
             if (options.wrap)    this._addElementToParentNode(options.wrap);
+            if (options.src)     this.el.src = options.src;
 
             return this;
         }
@@ -191,8 +193,8 @@
          * Клонирует node элемент
          * @returns {ActiveX.IXMLDOMNode | Node}
          */
-        clone() {
-            return this.el.cloneNode(true);
+        clone(flag) {
+            return this.el.cloneNode(flag);
         }
 
         /**

@@ -1,7 +1,7 @@
 ﻿JavaScript libraly - Dooli
 ====================
 
-v1.9.3
+v1.9.6
 
 ### install
 ```bash
@@ -79,6 +79,20 @@ Dooli('button').bindMultiple({
     click: () => {},
     mousemove: () => {},
 });
+```
+
+### Ивенты
+Все довольно понятно:
+```javascript
+require('dooli/modules/events.dooli');
+D.events.on('event', () => {
+    // делаем что то при каждом триггере ивента event
+});
+D.events.once('event', () => {
+    // делаем что то один раз при триггере ивента event
+});
+// Создаем кастомный ивент с именем event
+D.events.trigger('event'/*, param1, param2, param3 */);
 ```
 
 ### Стороннее расширение библиотеки ###
