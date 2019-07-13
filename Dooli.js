@@ -55,6 +55,16 @@
             return this;
         }
 
+        subscribe(params) {
+            const currentEl = this.el;
+            for (const param in params) {
+                this.el = params[param].options.node;
+                this.bindEvent(param, params[param].options.callback);
+            }
+
+            this.el = currentEl;
+        }
+
         /**
          * Добавляет элемент в узел
          * @param options
@@ -380,6 +390,12 @@
             }
         }
 
+        /**
+         * Удаляет коллбек на событие
+         * @param event
+         * @param callback
+         * @param ctx
+         */
         removeEvent(event, callback, ctx) {
             const el = this.obj();
             if (window.removeEventListener) {
@@ -389,12 +405,20 @@
             }
         }
 
+        /**
+         * Перебирает элементы с коллбеком
+         * @param callback
+         */
         each(callback) {
             for (let i = 0; i < this.el.length; i++) {
                 callback.call(Array.prototype, Dooli(this.el[i]), i, this.el);
             }
         }
 
+        /**
+         * Генерирует анимацию по правилам для элемента
+         * @param options
+         */
         animate(options) {
             const start = performance.now();
 
@@ -412,6 +436,11 @@
             });
         }
 
+        /**
+         * Возвращает родителя с нужным css классом для нашего потомка
+         * @param cssClass
+         * @returns {*}
+         */
         findParent(cssClass) {
             let el = this.el;
             while (!el.classList.contains(cssClass)) {
@@ -422,6 +451,52 @@
             }
 
             return el;
+        }
+
+        /**
+         * Возвращает координаты элемента
+         * @returns {{top: number, right: number, bottom: number, left: number}}
+         */
+        getCoords() {
+            const coords = this.el.getBoundingClientRect();
+
+            return {
+                top: window.pageYOffset + coords.top,
+                right: window.pageXOffset + coords.right,
+                bottom: window.pageYOffset + coords.bottom,
+                left: window.pageXOffset + coords.left,
+            }
+        }
+
+        /**
+         * Возвращает координаты страницы
+         * @returns {{top: number, left: number, right: number, bottom: number}}
+         */
+        getPageCoords() {
+            return {
+                top: window.pageYOffset,
+                left: window.pageXOffset,
+                right: window.pageXOffset + document.documentElement.clientWidth,
+                bottom: window.pageYOffset + document.documentElement.clientHeight
+            };
+        }
+
+        /**
+         * Виден ли сейчас элемент в браузере
+         * @returns {boolean}
+         */
+        isVisibleContent() {
+            const elementPosition = this.getCoords();
+            const pagePosition = this.getPageCoords();
+
+            if (elementPosition.bottom > pagePosition.top &&
+                elementPosition.top < pagePosition.bottom &&
+                elementPosition.right > pagePosition.left &&
+                elementPosition.left < pagePosition.right) {
+                return true;
+            }
+
+            return false;
         }
     }
 

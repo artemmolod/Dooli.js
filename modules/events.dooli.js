@@ -1,4 +1,4 @@
-module.exports = D.events = {
+const events = {
     events: {},
 
     onceCallbackCall: {},
@@ -54,3 +54,5 @@ module.exports = D.events = {
         this.events[ev] = array;
     },
 };
+
+export default events;

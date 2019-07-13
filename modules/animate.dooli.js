@@ -10,4 +10,4 @@ animate.bounce = (fraction) => {
     }
 };
 
-module.exports = animate;
+export default animate;

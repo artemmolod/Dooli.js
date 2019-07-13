@@ -1,2 +1,4 @@
-/.idea/*
-example/*
+.idea/*
+node_modules/*
+test.js
+lib/index.html

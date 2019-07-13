@@ -1,14 +1,42 @@
 {
   "name": "dooli",
-  "version": "1.9.6",
+  "version": "1.9.8",
   "description": "Javascript library",
-  "keywords": ["javascript", "library", "browser"],
+  "keywords": [
+    "javascript",
+    "library",
+    "browser"
+  ],
   "main": "Dooli.js",
-  "directories": {
-    "example": "example"
+  "dependencies": {
+    "dui": "./lib"
+  },
+  "devDependencies": {
+    "@babel/core": "7.5.4",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/preset-flow": "7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "amd-webpack-plugin": "^1.0.12",
+    "babel-cli": "^7.0.0-beta.3",
+    "babel-loader": "^8.0.5",
+    "babel-plugin-transform-es2015-modules-amd": "^6.24.1",
+    "css-loader": "3.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "less": "3.9.0",
+    "less-loader": "5.0.0",
+    "sass": "1.22.4",
+    "sass-loader": "7.1.0",
+    "style-loader": "0.23.1",
+    "webpack": "4.35.3",
+    "webpack-cli": "3.3.5"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js && npm install",
+    "build:watch": "webpack --config webpack.config.js --watch",
+    "build:test": "webpack --config webpack.test.config.js --watch",
+    "build:babel": "babel modules/ajax.js --out-dir lib",
+    "aa": "babel --plugins transform-es2015-modules-amd modules/ajax.js --out-dir example"
   },
   "repository": {
     "type": "git",
