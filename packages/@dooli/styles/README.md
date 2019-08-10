@@ -60,3 +60,14 @@ const styles = createStyles({
 });
 
 ```
+
+**Prefix**
+```javascript
+const styles = createStyles({
+    button: {...}
+}, {
+    prefix: "MyPrefix"
+})()
+```
+
+Use: `styles.button` => Output => `MyPrefix__button`
