@@ -1,0 +1,21 @@
+{
+  "name": "dooli-styles",
+  "version": "0.0.2",
+  "description": "CSS decorator for react component",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/artemmolod/Dooli.js/"
+  },
+  "keywords": [
+    "react",
+    "css",
+    "component",
+    "library"
+  ],
+  "author": "Molodcov Artem <molodcov.artyom@mail.ru>",
+  "license": "ISC"
+}
