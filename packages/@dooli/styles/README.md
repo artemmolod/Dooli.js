@@ -1,13 +1,18 @@
 JavaScript libraly for react app
 ====================
 
-v0.0.2
+v0.0.3
+
+### install
+```bash
+npm i dooli-styles
+```
 
 **Example:**
 
 ```javascript
 import React from 'react';
-import { createStyles } from "@dooli/styles";
+import { createStyles } from "dooli-styles";
 
 const styles = createStyles({
     button: {
